@@ -1,1 +1,0 @@
-{"version":3,"sources":["index.js"],"names":["console","log","APIKEY"],"mappings":";;;AAIA,aAJA,QAAA,oBAEAA,QAAQC,IAAI,WAEZ,MAAMC,EAAS","file":"src.a399cfcf.js","sourceRoot":"../src","sourcesContent":["import './css/styles.css';\n\nconsole.log('lzksjgv');\n\nconst APIKEY = '22564694-3177f5daba1f2572eee652a36';"]}
