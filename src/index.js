@@ -16,7 +16,7 @@ const refs = {
 
 var lightbox = new SimpleLightbox('.gallery a');
 axios.defaults.baseURL = 'https://pixabay.com/api';
-const OPTIONS = '&image_type=photo&orientation=horizontal&safesearch=true&per_page=10';
+const OPTIONS = '&image_type=photo&orientation=horizontal&safesearch=true&per_page=20';
 const APIKEY = '22564694-3177f5daba1f2572eee652a36';
 let keyWord = '';
 let pageNum = 1;
@@ -27,6 +27,7 @@ refs.btnLoadMore.addEventListener('click', onLoadMore);
 
 function onSearch(event) {
     event.preventDefault();
+    pageNum = 1;
     const form = event.currentTarget;
     keyWord = form.elements.searchQuery.value.trim();
     clearMarkup();
