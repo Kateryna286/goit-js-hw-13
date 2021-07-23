@@ -1,12 +1,10 @@
 import './css/styles.css';
 //import '../node_modules/simplelightbox/src/simple-lightbox';
 import '../node_modules/simplelightbox/src/simple-lightbox.scss';
-import {SimpleLightbox} from 'simplelightbox';
-//import SimpleLightbox from "simplelightbox/dist/simple-lightbox.esm";
+import SimpleLightbox from "simplelightbox";
+
 import axios from 'axios';
 import { Notify } from 'notiflix';
-//import SimpleLightbox from "simplelightbox/dist/simple-lightbox.esm";
-//import SimpleLightbox from "simplelightbox";
 import imageCardTpl from './templates/imgcard.hbs';
 
 
@@ -18,7 +16,7 @@ const refs = {
     btnLoadMore: document.querySelector('button[type=button]'),
 };
 
-//var lightbox = new SimpleLightbox('.gallery a');
+var lightbox = new SimpleLightbox('.gallery a');
 axios.defaults.baseURL = 'https://pixabay.com/api';
 const OPTIONS = '&image_type=photo&orientation=horizontal&safesearch=true';
 const APIKEY = '22564694-3177f5daba1f2572eee652a36';
@@ -33,7 +31,9 @@ function onSearch(event) {
     if (keyWord !== "") {
         fetchImagesByKeyWord(keyWord)
             .then(images => {
-                if (images.length === 0) {
+                console.log(images.hits.length);
+                if (images.hits.length === 0) {
+                    console.log(images.totalHits.length);
                     Notify.failure(
                         'Sorry, there are no images matching your search query. Please try again.',
                         {
@@ -41,10 +41,19 @@ function onSearch(event) {
                         });
                 }
 
-                renderImagesCardsMarkup(images);
-                //lightbox.refresh();
-                
-                
+                else {
+                    renderImagesCardsMarkup(images);
+                        const totalHits = images.totalHits;
+                        Notify.info(
+                            `Hooray! We found ${totalHits} images.`,
+                            {
+                                timeout: 2000,
+                            });
+                    console.log(totalHits);
+                    lightbox.refresh();
+                };
+
+        
 
             })
             .catch(error => console.log(error));
@@ -53,11 +62,11 @@ function onSearch(event) {
 
 async function fetchImagesByKeyWord(keyWord) {
     const response = await axios.get(`/?key=${APIKEY}&q=${keyWord}${OPTIONS}`);
-    return response.data.hits;
+    return response.data;
 };
 
 function createImagesCardsMarkup(images) {
-    return images.map(imageCardTpl).join('');
+    return images.hits.map(imageCardTpl).join('');
 };
 
 function renderImagesCardsMarkup(images) {
@@ -70,7 +79,6 @@ function clearMarkup() {
 };
 
 
-//console.log(createImagesCardsMarkup(images));
 
 // async function addAndRenderBook() {
 //   try {
@@ -81,22 +89,3 @@ function clearMarkup() {
 //   }
 // }
 
-// async function fetchImagesByKeyWord(keyWord) {
-//   try {
-//     const response = await axios.get(`/?key=${APIKEY}&q=${keyWord}${OPTIONS}`);
-//     return response.data.hits;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
-
-// var lightbox = new SimpleLightbox('.gallery a');
-
-// fetchImages(images => {
-//   renderImages(images);
-//   lightbox.refresh();
-// });
-
-// 1 - fetch картинки
-// 2 - рисуем
-// 3 - рефреш либы

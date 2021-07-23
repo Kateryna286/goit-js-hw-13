@@ -4,13 +4,13 @@
  */
 
 .gallery {
-  margin-top: 20px;
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
 }
 
 .photo-card {
-  width: 320px;
+  flex-basis: calc(100% / 4 - 20px);
 }
 
 .info {
@@ -19,4 +19,8 @@
 
 img {
   width: 320px;
+}
+
+.info-item {
+  display: grid;
 }
