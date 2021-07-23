@@ -1,8 +1,6 @@
 import './css/styles.css';
-//import '../node_modules/simplelightbox/src/simple-lightbox';
 import '../node_modules/simplelightbox/src/simple-lightbox.scss';
 import SimpleLightbox from "simplelightbox";
-
 import axios from 'axios';
 import { Notify } from 'notiflix';
 import imageCardTpl from './templates/imgcard.hbs';
@@ -23,6 +21,7 @@ const APIKEY = '22564694-3177f5daba1f2572eee652a36';
 let keyWord = '';
 let pageNum = 1;
 
+refs.btnLoadMore.classList.add('is-hidden');
 refs.searchForm.addEventListener('submit', onSearch);
 refs.btnLoadMore.addEventListener('click', onLoadMore);
 
@@ -54,6 +53,7 @@ function onSearch(event) {
                             });
                     console.log(totalHits);
                     lightbox.refresh();
+                    refs.btnLoadMore.classList.remove('is-hidden');
                 };
 
         
@@ -75,6 +75,7 @@ function onLoadMore(event) {
                         {
                             timeout: 2000,
                         });
+                refs.btnLoadMore.classList.add('is-hidden');
             }
             else {
                 renderImagesCardsMarkup(images);
