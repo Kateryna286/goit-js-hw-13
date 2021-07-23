@@ -18,9 +18,10 @@ const refs = {
 
 var lightbox = new SimpleLightbox('.gallery a');
 axios.defaults.baseURL = 'https://pixabay.com/api';
-const OPTIONS = '&image_type=photo&orientation=horizontal&safesearch=true&per_page=40';
+const OPTIONS = '&image_type=photo&orientation=horizontal&safesearch=true&per_page=10';
 const APIKEY = '22564694-3177f5daba1f2572eee652a36';
 let keyWord = '';
+let pageNum = 1;
 
 refs.searchForm.addEventListener('submit', onSearch);
 refs.btnLoadMore.addEventListener('click', onLoadMore);
@@ -64,16 +65,27 @@ function onSearch(event) {
 
 function onLoadMore(event) {
     event.preventDefault();
+    incrementPageNum();
     fetchImagesByKeyWord(keyWord)
         .then(images => {
+            if (images.hits.length === 0) {
+                    console.log(images.totalHits.length);
+                    Notify.failure(
+                        "We're sorry, but you've reached the end of search results.",
+                        {
+                            timeout: 2000,
+                        });
+            }
+            else {
                 renderImagesCardsMarkup(images);
                 lightbox.refresh();
+            }
         })
         .catch(error => console.log(error));
 };
 
 async function fetchImagesByKeyWord(keyWord) {
-    const response = await axios.get(`/?key=${APIKEY}&q=${keyWord}${OPTIONS}&page=2`);
+    const response = await axios.get(`/?key=${APIKEY}&q=${keyWord}${OPTIONS}&page=${pageNum}`);
     return response.data;
 };
 
@@ -83,11 +95,16 @@ function createImagesCardsMarkup(images) {
 
 function renderImagesCardsMarkup(images) {
     const markup = createImagesCardsMarkup(images);   
-    refs.imageGallery.innerHTML = markup;
+    refs.imageGallery.insertAdjacentHTML('beforeend', markup);
 };
 
 function clearMarkup() {
     refs.imageGallery.innerHTML = "";
+};
+
+function incrementPageNum() {
+    pageNum += 1;
+    console.log(pageNum);
 };
 
 
